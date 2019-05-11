@@ -15,6 +15,8 @@ func (p *Plugin) InitAPI() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/dialog", p.handleDialog).Methods("POST")
 
+	r.HandleFunc("/public/reminder", p.handlePublicScheduleReminder).Methods("POST")
+
 	r.HandleFunc("/view/ephemeral", p.handleViewEphemeral).Methods("POST")
 	r.HandleFunc("/view/complete/list", p.handleViewCompleteList).Methods("POST")
 
@@ -167,6 +169,49 @@ func (p *Plugin) handleDialog(w http.ResponseWriter, req *http.Request) {
 		},
 	}
 	p.API.SendEphemeralPost(user.Id, reminder)
+
+}
+
+func (p *Plugin) handlePublicScheduleReminder(w http.ResponseWriter, r *http.Request) {
+
+	p.API.LogInfo("handlePUblicScheduleReminder")
+
+	request := model.PostActionIntegrationRequestFromJson(r.Body)
+
+	user, uErr := p.API.GetUser(request.UserId)
+	if uErr != nil {
+		p.API.LogError(uErr.Error())
+		writePostActionIntegrationResponseError(w, &model.PostActionIntegrationResponse{})
+		return
+	}
+
+	rr := &ReminderRequest{
+		TeamId:   request.TeamId,
+		Username: user.Username,
+		Reminder: Reminder{
+			Id:        model.NewId(),
+			TeamId:    request.TeamId,
+			Username:  user.Username,
+			Message:   request.Context["message"].(string),
+			Completed: p.emptyTime,
+			Target:    request.Context["target"].(string),
+			When:      request.Context["when"].(string),
+		},
+	}
+
+	if cErr := p.CreateOccurrences(rr); cErr != nil {
+		p.API.LogError(cErr.Error())
+		writePostActionIntegrationResponseError(w, &model.PostActionIntegrationResponse{})
+		return
+	}
+
+	if rErr := p.UpsertReminder(rr); rErr != nil {
+		p.API.LogError(rErr.Error())
+		writePostActionIntegrationResponseError(w, &model.PostActionIntegrationResponse{})
+		return
+	}
+
+	writePostActionIntegrationResponseOk(w, &model.PostActionIntegrationResponse{})
 
 }
 
