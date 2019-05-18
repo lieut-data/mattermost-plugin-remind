@@ -172,7 +172,7 @@ func (p *Plugin) handleDialog(w http.ResponseWriter, req *http.Request) {
 
 func (p *Plugin) handlePublicScheduleReminder(w http.ResponseWriter, r *http.Request) {
 
-	p.API.LogInfo("handlePUblicScheduleReminder")
+	p.API.LogInfo("handlePublicScheduleReminder")
 
 	request := model.PostActionIntegrationRequestFromJson(r.Body)
 
