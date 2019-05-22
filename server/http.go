@@ -111,9 +111,9 @@ func (p *Plugin) handleReminder(w http.ResponseWriter, r *http.Request) {
 			T, _ := p.translation(user)
 
 			dialogRequest := model.OpenDialogRequest{
-				TriggerId: model.NewId(),
-				UserId:    request.UserId,
-				URL:       fmt.Sprintf("%s/plugins/%s/dialog", p.URL, manifest.Id),
+				//TriggerId: model.NewId(),
+				UserId: request.UserId,
+				URL:    fmt.Sprintf("%s/plugins/%s/dialog", p.URL, manifest.Id),
 				Dialog: model.Dialog{
 					Title:       T("schedule.reminder"),
 					CallbackId:  model.NewId(),
