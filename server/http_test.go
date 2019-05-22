@@ -985,7 +985,7 @@ func TestHandleCloseList(t *testing.T) {
 		api.On("LogDebug", mock.Anything, mock.Anything, mock.Anything).Maybe()
 		api.On("LogError", mock.Anything, mock.Anything, mock.Anything).Maybe()
 		api.On("LogInfo", mock.Anything).Maybe()
-		api.On("DeleteEphemeralPost", mock.Anything, mock.Anything).Return(nil)
+		//api.On("DeleteEphemeralPost", mock.Anything, mock.Anything).Return(nil)
 		return api
 	}
 

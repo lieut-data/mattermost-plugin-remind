@@ -106,72 +106,71 @@ func (p *Plugin) handleReminder(w http.ResponseWriter, r *http.Request) {
 
 	writePostActionIntegrationResponseOk(w, &model.PostActionIntegrationResponse{})
 
-	/*
-		if user, uErr := p.API.GetUser(request.UserId); uErr == nil {
-			if post, pErr := p.API.GetPost(request.PostId); pErr == nil {
-				T, _ := p.translation(user)
+	if user, uErr := p.API.GetUser(request.UserId); uErr == nil {
+		if post, pErr := p.API.GetPost(request.PostId); pErr == nil {
+			T, _ := p.translation(user)
 
-				dialogRequest := model.OpenDialogRequest{
-					TriggerId: model.NewId(),
-					URL:       fmt.Sprintf("%s/plugins/%s/dialog", p.URL, manifest.Id),
-					Dialog: model.Dialog{
-						Title:       T("schedule.reminder"),
-						CallbackId:  model.NewId(),
-						SubmitLabel: T("button.schedule"),
-						Elements: []model.DialogElement{
-							{
-								DisplayName: T("schedule.message"),
-								Name:        "message",
-								Placeholder: post.Message,
-								Type:        "text",
-								SubType:     "text",
-							},
-							{
-								DisplayName: T("schedule.target"),
-								Name:        "target",
-								HelpText:    T("schedule.target.help"),
-								Placeholder: "me",
-								Type:        "text",
-								SubType:     "text",
-								Optional:    true,
-							},
-							{
-								DisplayName: T("schedule.time"),
-								Name:        "time",
-								Type:        "select",
-								SubType:     "select",
-								Options: []*model.PostActionOptions{
-									{
-										Text:  T("button.snooze.20min"),
-										Value: "20min",
-									},
-									{
-										Text:  T("button.snooze.1hr"),
-										Value: "1hr",
-									},
-									{
-										Text:  T("button.snooze.3hr"),
-										Value: "3hr",
-									},
-									{
-										Text:  T("button.snooze.tomorrow"),
-										Value: "tomorrow",
-									},
-									{
-										Text:  T("button.snooze.nextweek"),
-										Value: "nextweek",
-									},
+			dialogRequest := model.OpenDialogRequest{
+				TriggerId: model.NewId(),
+				UserId:    request.UserId,
+				URL:       fmt.Sprintf("%s/plugins/%s/dialog", p.URL, manifest.Id),
+				Dialog: model.Dialog{
+					Title:       T("schedule.reminder"),
+					CallbackId:  model.NewId(),
+					SubmitLabel: T("button.schedule"),
+					Elements: []model.DialogElement{
+						{
+							DisplayName: T("schedule.message"),
+							Name:        "message",
+							Placeholder: post.Message,
+							Type:        "text",
+							SubType:     "text",
+						},
+						{
+							DisplayName: T("schedule.target"),
+							Name:        "target",
+							HelpText:    T("schedule.target.help"),
+							Placeholder: "me",
+							Type:        "text",
+							SubType:     "text",
+							Optional:    true,
+						},
+						{
+							DisplayName: T("schedule.time"),
+							Name:        "time",
+							Type:        "select",
+							SubType:     "select",
+							Options: []*model.PostActionOptions{
+								{
+									Text:  T("button.snooze.20min"),
+									Value: "20min",
+								},
+								{
+									Text:  T("button.snooze.1hr"),
+									Value: "1hr",
+								},
+								{
+									Text:  T("button.snooze.3hr"),
+									Value: "3hr",
+								},
+								{
+									Text:  T("button.snooze.tomorrow"),
+									Value: "tomorrow",
+								},
+								{
+									Text:  T("button.snooze.nextweek"),
+									Value: "nextweek",
 								},
 							},
 						},
 					},
-				}
-				if pErr := p.API.OpenInteractiveDialog(dialogRequest); pErr != nil {
-					p.API.LogError("Failed opening interactive dialog " + pErr.Error())
-				}
+				},
+			}
+			if pErr := p.API.OpenInteractiveDialog(dialogRequest); pErr != nil {
+				p.API.LogError("Failed opening interactive dialog " + pErr.Error())
 			}
 		}
-	*/
+	}
 
 }
 
@@ -703,11 +702,11 @@ func (p *Plugin) handleSnoozeList(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *Plugin) handleCloseList(w http.ResponseWriter, r *http.Request) {
-	request := model.PostActionIntegrationRequestFromJson(r.Body)
-	post := &model.Post{
-		Id: request.PostId,
-	}
-	p.API.DeleteEphemeralPost(request.UserId, post)
+	//request := model.PostActionIntegrationRequestFromJson(r.Body)
+	//post := &model.Post{
+	//	Id: request.PostId,
+	//}
+	//p.API.DeleteEphemeralPost(request.UserId, post)
 	writePostActionIntegrationResponseOk(w, &model.PostActionIntegrationResponse{})
 }
 
