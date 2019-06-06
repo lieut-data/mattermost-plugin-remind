@@ -27,7 +27,7 @@ export default class RemindPlugin {
     initialize(registry, store) {
         registry.registerPostDropdownMenuAction(
             <RemindMenuItem/>,
-            (postId) => store.dispatch(postDropdownMenuAction(postId)),
+            (postId) => store.dispatch(postDropdownMenuAction(postId, registry)),
         );
 
         // registry.registerReducer(reducer);

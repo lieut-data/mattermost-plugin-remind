@@ -6,8 +6,84 @@ import {id as pluginId} from './manifest';
 
 export const postDropdownMenuAction = openInteractiveDialog;
 
-export function openInteractiveDialog(postId) {
+export function openInteractiveDialog(postId, registry) {
     return async (dispatch, getState) => {
+        const dialog = {
+            url: 'http://localhost:8065/plugins/com.github.scottleedavis.mattermost-plugin-remind/dialog',
+            dialog: {
+                title: 'Schedule Reminder',
+                elements: [
+                    {
+                        display_name: 'Message',
+                        name: 'message',
+                        type: 'text',
+                        subtype: 'text',
+                        default: '',
+                        placeholder: '',
+                        help_text: '',
+                        optional: false,
+                        min_length: 0,
+                        max_length: 0,
+                        data_source: '',
+                        options: null,
+                    },
+                    {
+                        display_name: 'Target',
+                        name: 'target',
+                        type: 'text',
+                        subtype: 'text',
+                        default: '',
+                        placeholder: 'me',
+                        help_text: '@user or ~channel',
+                        optional: true,
+                        min_length: 0,
+                        max_length: 0,
+                        data_source: '',
+                        options: null,
+                    },
+                    {
+                        display_name: 'Time',
+                        name: 'time',
+                        type: 'select',
+                        subtype: 'select',
+                        default: '',
+                        placeholder: '',
+                        help_text: '',
+                        optional: false,
+                        min_length: 0,
+                        max_length: 0,
+                        data_source: '',
+                        options: [
+                            {
+                                text: '20 minutes',
+                                value: '20min',
+                            },
+                            {
+                                text: '1 hour',
+                                value: '1hr',
+                            },
+                            {
+                                text: '3 hours',
+                                value: '3hr',
+                            },
+                            {
+                                text: 'Tomorrow at 9AM',
+                                value: 'tomorrow',
+                            },
+                            {
+                                text: 'Next week',
+                                value: 'nextweek',
+                            },
+                        ],
+                    },
+                ],
+                submit_label: 'Schedule Reminder',
+                notify_on_cancel: false,
+            },
+        };
+
+        registry.openInteractiveDialog(dialog);
+
         const state = getState();
         const opts = {
             postId,
