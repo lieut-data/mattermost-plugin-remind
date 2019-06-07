@@ -28,26 +28,31 @@ func (p *Plugin) checkServerVersion() error {
 }
 
 func (p *Plugin) OnActivate() error {
+	p.API.LogInfo("checkServerVersion")
 	if err := p.checkServerVersion(); err != nil {
 		return err
 	}
-
+	p.API.LogInfo("GetTeams")
 	teams, err := p.API.GetTeams()
 	if err != nil {
 		return errors.Wrap(err, "failed to query teams OnActivate")
 	}
 
+	p.API.LogInfo("InitAPI")
 	p.router = p.InitAPI()
+	p.API.LogInfo("ensureBotExists")
 	p.ensureBotExists()
 	p.emptyTime = time.Time{}.AddDate(1, 1, 1)
 	p.supportedLocales = []string{"en"}
 
+	p.API.LogInfo("registerCommand")
 	for _, team := range teams {
 		if err := p.registerCommand(team.Id); err != nil {
 			return errors.Wrap(err, "failed to register command")
 		}
 	}
 
+	p.API.LogInfo("Run")
 	p.Run()
 
 	return nil
