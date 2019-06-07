@@ -1,13 +1,13 @@
 import {getConfig} from 'mattermost-redux/selectors/entities/general';
 
-import {getUserId} from 'selectors';
+// import {getUserId} from 'selectors';
 
 import {id as pluginId} from './manifest';
 
 export const postDropdownMenuAction = openInteractiveDialog;
 
-export function openInteractiveDialog(postId, registry) {
-    return async (dispatch, getState) => {
+export function openInteractiveDialog() { //postId, registry) {
+    return async () => { //dispatch, getState) => {
         const dialog = {
             url: 'http://localhost:8065/plugins/com.github.scottleedavis.mattermost-plugin-remind/dialog',
             dialog: {
@@ -82,18 +82,8 @@ export function openInteractiveDialog(postId, registry) {
             },
         };
 
-        registry.openInteractiveDialog(dialog);
+        window.openInteractiveDialog(dialog);
 
-        const state = getState();
-        const opts = {
-            postId,
-            userId: getUserId(state),
-        };
-
-        fetch(getPluginServerRoute(state) + '/remind/' + postId, {
-            method: 'post',
-            body: JSON.stringify(opts),
-        });
     };
 }
 
