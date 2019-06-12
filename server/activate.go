@@ -28,32 +28,34 @@ func (p *Plugin) checkServerVersion() error {
 }
 
 func (p *Plugin) OnActivate() error {
-	p.API.LogInfo("checkServerVersion")
+	fmt.Printf("REMIND: OnActivate\n")
+	fmt.Printf("REMIND: checkServerVersion\n")
 	if err := p.checkServerVersion(); err != nil {
 		return err
 	}
-	p.API.LogInfo("GetTeams")
+	fmt.Printf("REMIND: GetTeams\n")
 	teams, err := p.API.GetTeams()
 	if err != nil {
 		return errors.Wrap(err, "failed to query teams OnActivate")
 	}
 
-	p.API.LogInfo("InitAPI")
+	fmt.Printf("REMIND: InitAPI\n")
 	p.router = p.InitAPI()
-	p.API.LogInfo("ensureBotExists")
+	fmt.Printf("REMIND: ensureBotExists\n")
 	p.ensureBotExists()
 	p.emptyTime = time.Time{}.AddDate(1, 1, 1)
 	p.supportedLocales = []string{"en"}
 
-	p.API.LogInfo("registerCommand")
+	fmt.Printf("REMIND: registerCommand")
 	for _, team := range teams {
 		if err := p.registerCommand(team.Id); err != nil {
 			return errors.Wrap(err, "failed to register command")
 		}
 	}
 
-	p.API.LogInfo("Run")
+	fmt.Printf("REMIND: Run\n")
 	p.Run()
+	fmt.Printf("REMIND: end OnActivate\n")
 
 	return nil
 }
@@ -77,11 +79,15 @@ func (p *Plugin) OnDeactivate() error {
 }
 
 func (p *Plugin) OnConfigurationChange() error {
+	fmt.Printf("REMIND: OnConfigurationChange\n")
+	fmt.Printf("REMIND: GetConfig\n")
 	p.ServerConfig = p.API.GetConfig()
 	p.URL = fmt.Sprintf("%s", *p.ServerConfig.ServiceSettings.SiteURL)
+	fmt.Printf("REMIND: TranslationsPreInit\n")
 	if err := p.TranslationsPreInit(); err != nil {
 		return errors.Wrap(err, "failed to initialize translations")
 	}
+	fmt.Printf("REMIND: end OnConfigurationChange\n")
 	return nil
 }
 
